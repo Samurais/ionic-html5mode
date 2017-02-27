@@ -16,16 +16,15 @@ var replace = require('gulp-replace');
 
 // === PATHS
 var paths = {
-  sass: ['./src/index.scss', './src/**/*.scss'],
-  jade: ['./src/**/*.jade', './src/index.jade'],
-  js: ['./src/**/*.js']
+  sass: ['./www/index.scss', './www/**/*.scss'],
+  js: ['./www/**/*.js']
 };
 
 // === DEFAULT TASK
 gulp.task('default', ['serve']);
 
 // Static Server + watching scss/html files
-gulp.task('serve', ['sass', 'compressJs', 'jade-index', 'jade-templates'], function() {
+gulp.task('serve', function() {
 
   browserSync.instance = browserSync.init({
     startPath: '/index.html',
@@ -40,9 +39,7 @@ gulp.task('serve', ['sass', 'compressJs', 'jade-index', 'jade-templates'], funct
 
   // === WATCH
   gulp.watch(paths.sass, ['sass']);
-  gulp.watch(paths.js, ['compressJs', browserSync.reload]);
-  gulp.watch(paths.jade[1], ['jade-index', browserSync.reload]);
-  gulp.watch(paths.jade[0], ['jade-templates', browserSync.reload]);
+  gulp.watch(paths.js, [browserSync.reload]);
 
   gutil.log(gutil.colors.red('\n\n•••••••••••••••••••••••••••••••••••••\n'), gutil.colors.yellow('  SERVER RUNNING...'), gutil.colors.red('\n•••••••••••••••••••••••••••••••••••••\n\n'));
 
@@ -72,24 +69,4 @@ gulp.task('compressJs', function () {
     .pipe(concat('all.js'))
     .pipe(uglify())
     .pipe(gulp.dest('./www/js/'));
-});
-
-
-gulp.task('jade-templates', function(){
-	return gulp.src(paths.jade[0])
-    .pipe(jade())
-    .pipe(gulp.dest('./www/templates/'));
-})
-gulp.task('jade-index', function () {
-  return gulp.src(paths.jade[1])
-    .pipe(jade())
-    .pipe(gulp.dest('./www/'));
-});
-
-
-gulp.task('build:device', ['sass', 'compressJs', 'jade-templates'],function () {
-  return gulp.src(paths.jade[1])
-  	.pipe(replace('base(href="/")', 'base(href=".")'))
-    .pipe(jade())
-    .pipe(gulp.dest('./www/'));
 });
