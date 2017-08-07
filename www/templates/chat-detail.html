@@ -10,5 +10,13 @@
     <p>
       {{chat.lastText}}
     </p>
+
+    <div class="list">
+      <label class="item item-input">
+    <input type="text" placeholder="{{data.messagePlaceholder}}" ng-model="data.message" ng-change="onMessageTextChange()">
+  </label>
+      <button class="button button-balanced button-full" ng-click="sendMessage()"> send </button>
+    </div>
+
   </ion-content>
 </ion-view>
